@@ -884,6 +884,7 @@ historical_agitators.8 = { #Napoleon III
 		has_dlc_feature = voice_of_the_people_content
 		empty_agitator_slots >= 1
 		uses_fra_characters = yes		##Converter
+		always = no						##Converter, the whole 'Napoleon' thing is *very unlikey* to have happened in a converted game
 		game_date < 1870.1.1
 		OR = {
 			AND = {
@@ -991,11 +992,6 @@ historical_agitators.9 = { #Norton
 		game_date > 1860.1.1
 		game_date < 1880.1.1
 		NOT = { has_global_variable = emperor_norton_spawn }
-		##Converter
-		country_average_cultural_acceptance = {
-			target = global_var:gbr_culture
-			value >= acceptance_status_4
-		}
 	}
 
 	immediate = {
@@ -1004,7 +1000,7 @@ historical_agitators.9 = { #Norton
 		if = {
 			limit = { has_variable = rule_63_effect }
 			create_character = {
-				template = fem_usa_emperor_norton_character_template
+				template = fem_usa_joshua_norton_character_template
 				on_created = {
 					set_variable = emperor_norton_var		
 				}
@@ -1012,7 +1008,7 @@ historical_agitators.9 = { #Norton
 		}
 		else = {
 			create_character = {
-				template = usa_emperor_norton_character_template
+				template = usa_joshua_norton_character_template
 				on_created = {
 					set_variable = emperor_norton_var		
 				}
@@ -1291,14 +1287,9 @@ historical_agitators.12 = { #Trotsky
 	trigger = {
 		has_dlc_feature = voice_of_the_people_content
 		empty_agitator_slots >= 1
-		OR = {		##Converter
-			uses_rus_characters = yes
-			uses_ukr_characters = yes
-		}
+		uses_ukr_characters = yes						##Converter
 		any_scope_state = {
-			state_region = {
-				is_homeland = global_var:ukr_culture		##Converter
-			}
+			converter_is_ukrainian_homeland = yes		##Converter
 			turmoil > 0.25
 		}
 		game_date > 1898.1.1
@@ -1310,33 +1301,6 @@ historical_agitators.12 = { #Trotsky
 
 	immediate = {
 		##Converter
-		if = {
-			limit = {
-				any_scope_pop = { culture = cu:ashkenazi }
-			}
-			cu:ashkenazi = { save_scope_as = trotsky_culture }
-		}
-		else_if = {
-			limit = {
-				any_scope_pop = { culture = { has_discrimination_trait = jewish_group } }
-			}
-			random_scope_pop = {
-				limit = { culture = { has_discrimination_trait = jewish_group } }
-				culture = { save_scope_as = trotsky_culture }
-			}
-		}
-		else_if = {
-			limit = {
-				any_scope_pop = { religion = { has_discrimination_trait = jewish } }
-			}
-			random_scope_pop = {
-				limit = { religion = { has_discrimination_trait = jewish } }
-				culture = { save_scope_as = trotsky_culture }
-			}
-		}
-		else = {
-			cu:ashkenazi = { save_scope_as = trotsky_culture }
-		}
 		converter_rule_63_effect = yes
 		if = {
 			limit = { has_variable = rule_63_effect }
@@ -1365,9 +1329,7 @@ historical_agitators.12 = { #Trotsky
 		set_global_variable = trotsky_spawn
 		random_scope_state = {
 			limit = {
-				state_region = {
-					is_homeland = cu:ukrainian
-				}
+				converter_is_ukrainian_homeland = yes	##Converter
 				turmoil > 0.25
 			}
 			save_scope_as = trotsky_state
@@ -1397,9 +1359,7 @@ historical_agitators.12 = { #Trotsky
 		}
 		random_scope_state = {
 			limit = {
-				state_region = {
-					is_homeland = cu:ukrainian
-				}
+				converter_is_ukrainian_homeland = yes	##Converter
 			}
 			add_radicals_in_state = {
 				value = medium_radicals
@@ -1503,9 +1463,7 @@ historical_agitators.13 = { #Dabrowski
 		}
 		every_scope_state = {
 			limit = {
-				state_region = {
-					is_homeland = cu:polish
-				}
+				converter_is_polish_homeland = yes	##Converter
 			}
 			add_radicals_in_state = {
 				value = small_radicals
@@ -1574,7 +1532,7 @@ historical_agitators.14 = { #Dickens
 		set_global_variable = dickens_spawn
 		random_country = {
 			limit = {
-				country_has_primary_culture = global_var:fra_culture		##Converter
+				any_primary_culture = { is_target_in_global_variable_list = { name = global_french_cultures target = this } }		##Converter
 			}
 			save_scope_as = french_scope
 		}
@@ -1844,11 +1802,11 @@ historical_agitators.17 = { #Boulanger
 	trigger = {
 		has_dlc_feature = voice_of_the_people_content
 		empty_agitator_slots >= 1
-		uses_fra_characters = yes		##Converter
+		uses_fra_characters = yes							##Converter
 		game_date > 1880.1.1
 		game_date < 1895.1.1
 		any_state = {
-			state_region = { is_homeland = global_var:fra_culture }		##Converter
+			converter_is_french_homeland = yes				##Converter
 			NOT = { owner = ROOT }
 		}
 		has_technology_researched = political_agitation
@@ -1885,9 +1843,9 @@ historical_agitators.17 = { #Boulanger
 		set_global_variable = boulanger_spawn
 		random_country = {
 			limit = {
-				uses_fra_characters = no		##Converter
+				uses_fra_characters = no					##Converter
 				any_state = {
-					state_region = { is_homeland = global_var:fra_culture }		##Converter
+					converter_is_french_homeland = yes		##Converter
 				}
 			}
 			save_scope_as = revenge_country
@@ -1985,7 +1943,7 @@ historical_agitators.18 = { #Lassalle
 	trigger = {
 		has_dlc_feature = voice_of_the_people_content
 		empty_agitator_slots >= 1
-		is_target_in_global_variable_list = { name = global_nor_ger_countries target = this }		##Converter
+		any_primary_culture = { is_target_in_global_variable_list = { name = global_nor_ger_cultures target = this } }		##Converter
 		game_date > 1848.1.1
 		game_date < 1885.1.1
 		has_technology_researched = dialectics
@@ -2318,15 +2276,7 @@ historical_agitators.21 = { #Sun
 			has_law = law_type:law_monarchy
 			has_law = law_type:law_theocracy
 		}
-		##Converter
-		NOT = {
-			is_target_in_global_variable_list = {
-				name = converter_unavailable_unique_characters
-				target = flag:converter_sun_yat_sen
-			}
-		}
-		uses_han_characters = yes
-		##Converter
+		uses_han_characters = yes				##Converter
 		game_date > 1888.1.1
 		game_date < 1925.1.1
 		any_scope_state = {
@@ -2480,6 +2430,70 @@ historical_agitators.22 = { #John Frost
 		name = historical_agitators.22.c
 		scope:historic_agitator_scope = {
 			transfer_character = scope:tasmania_owner_scope
+		}
+	}
+}
+
+historical_agitators.23 = { #Florence Nightingale
+	type = country_event
+	placement = root
+
+	gui_window = event_window_1char_tabloid
+	left_icon = scope:historic_agitator_scope
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	title = historical_agitators.23.t
+	desc = historical_agitators.23.d
+	flavor = historical_agitators.23.f
+
+	duration = 3
+
+	trigger = {
+		#Fired by character interaction
+	}
+
+	cancellation_trigger = {
+		scope:historic_agitator_scope = {
+			is_character_alive = no
+		}
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = nightingale_var
+			}
+			save_scope_as = historic_agitator_scope
+		}
+	}
+
+	option = {
+		name = historical_agitators.23.a
+		default_option = yes
+		scope:historic_agitator_scope = {
+			add_modifier = {
+				name = modifier_nightingale_popularity
+				days = normal_modifier_time
+			}
+		}
+		add_modifier = {
+			name = modifier_nightingale_soldiers
+			days = very_long_modifier_time
+		}
+	}
+	option = {
+		name = historical_agitators.23.b
+		add_modifier = {
+			name = modifier_nightingale_movement
+			days = normal_modifier_time
+		}
+		add_radicals = {
+			value = small_radicals
+			interest_group = scope:historic_agitator_scope.interest_group
 		}
 	}
 }
